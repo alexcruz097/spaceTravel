@@ -31,6 +31,7 @@ function SpacecraftBuild ()
   function handleClickOfBack (event)
   {
     // todo navigate back
+    navigate("/spacecrafts")
   }
 
   return (

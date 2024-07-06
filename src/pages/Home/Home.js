@@ -1,11 +1,10 @@
 import styles from "./Home.module.css";
 
-function Home ()
-{
+function Home() {
   return (
-    {
-      // todo
-    }
+    <div>
+      <h1>HOME PAGE</h1>
+    </div>
   );
 }
 

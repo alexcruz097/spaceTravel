@@ -1,9 +1,9 @@
 import { NavLink } from "react-router-dom";
 
 import styles from "./NavigationBar.module.css";
-import earth from "./images/earth.png";
-import rocket from "./images/rocket.png";
-import planets from "./images/planets.png";
+import earth from "../images/earth.png";
+import rocket from "../images/rocket.png";
+import planets from "../images/planets.png";
 function NavigationBar() {
   let textDecoration = {
     textDecoration: "none",
