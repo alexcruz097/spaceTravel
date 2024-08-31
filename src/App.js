@@ -12,11 +12,12 @@ import Spacecrafts from "./pages/Spacecrafts/Spacecrafts";
 import Planets from "./pages/Planets/Planets";
 import Spacecraft from "./pages/Spacecraft/Spacecraft";
 import SpacecraftBuild from "./pages/SpacecraftBuild/SpacecraftBuild";
-
+import spaceDB from "./services/SpaceTravelMockApi";
 function App() {
   const { isLoading } = useContext(LoadingContext);
   // todo wrap with BrowserRouter and render the necessary components
 
+  console.log(Spacecrafts)
   return (
     <>
       <BrowserRouter>
@@ -31,7 +32,7 @@ function App() {
               <Route path="/spacecrafts" element={<Spacecrafts />} />
               <Route path="/planets" element={<Planets />} />
               <Route path="/spacecraft" element={<Spacecraft />} />
-              <Route path="/spacecraftbuild" element={<SpacecraftBuild />} />
+              <Route path="/spacecraftbuild" element={<SpacecraftBuild spaceDB={spaceDB.MOCK_DB}/>} />
 
               <Route path="*" element={<Home />} />
             </Routes>

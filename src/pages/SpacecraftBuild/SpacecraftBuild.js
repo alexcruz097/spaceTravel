@@ -1,45 +1,59 @@
-import {useState, useContext} from "react";
-import {useNavigate} from "react-router-dom";
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import styles from "./SpacecraftBuild.module.css";
-import {LoadingContext} from "../../context/LoadingProvider";
+import { LoadingContext } from "../../context/LoadingProvider";
 import SpaceTravelApi from "../../services/SpaceTravelApi";
+import SpaceTravelMockApi from "../../services/SpaceTravelMockApi";
+function SpacecraftBuild({spaceDB}) {
 
-function SpacecraftBuild ()
-{
+  console.log(spaceDB.spacecrafts)
   const INITIAL_SPACECRAFT = {
     name: "",
     capacity: "",
     description: "",
-    pictureUrl: ""
+    pictureUrl: "",
   };
   const [spacecraft, setSpacecraft] = useState(INITIAL_SPACECRAFT);
   const [errors, setErrors] = useState([]);
   const navigate = useNavigate();
-  const {enableLoading, disableLoading} = useContext(LoadingContext);
+  const { enableLoading, disableLoading } = useContext(LoadingContext);
 
-  function handleChangeOfFormInput (event)
-  {
+  function handleChangeOfFormInput(event) {
     // todo update form state
-  }
+    //const name = e.target.name
+    //const value = e.target.value
+    const { name, value } = event.target;
 
-  async function handleSubmitOfForm (event)
-  {
+    setSpacecraft({
+      ...spacecraft,
+      [name]: value,
+    });
+  }
+  async function handleSubmitOfForm(event) {
     // todo submit the form using the API
+    console.log(spacecraft);
+    console.log(SpaceTravelApi.buildSpacecraft);
+
+    // SpaceTravelApi.buildSpacecraft({
+    //   name: "Endeavor",
+    //   capacity: "3000",
+    //   description: "Endeavor go beyond",
+    //   pictureUrl:
+    //     "https://www.dailynews.com/wp-content/uploads/2023/07/LDN-L-SHUTTLE-0721-DC-7.jpg?w=525",
+    // });
+    console.log(SpaceTravelMockApi.MOCK_DB.spacecrafts);
+    event.preventDefault();
   }
 
-  function handleClickOfBack (event)
-  {
+  function handleClickOfBack(event) {
     // todo navigate back
-    navigate("/spacecrafts")
+    navigate("/spacecrafts");
   }
 
   return (
     <>
-      <button
-        className={styles["button__back"]}
-        onClick={handleClickOfBack}
-      >
+      <button className={styles["button__back"]} onClick={handleClickOfBack}>
         Back 👈
       </button>
       <div>
@@ -91,19 +105,15 @@ function SpacecraftBuild ()
 
             <div className={styles["submitContainer"]}>
               <div className={styles["errorContainer"]}>
-                {
-                  errors.map((error, index) => <div
-                    key={index}
-                    className={styles["error"]}
-                  >{error}</div>)
-                }
+                {errors.map((error, index) => (
+                  <div key={index} className={styles["error"]}>
+                    {error}
+                  </div>
+                ))}
               </div>
 
               <div className={styles["button__submit"]}>
-                <button
-                  type="submit"
-                  onClick={handleSubmitOfForm}
-                >
+                <button type="submit" onClick={handleSubmitOfForm}>
                   Build 🏗️
                 </button>
               </div>

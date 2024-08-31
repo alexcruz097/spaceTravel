@@ -4,17 +4,15 @@ import { useNavigate } from "react-router-dom";
 import styles from "./Spacecrafts.module.css";
 import { LoadingContext } from "../../context/LoadingProvider";
 import SpaceTravelApi from "../../services/SpaceTravelApi";
-
+import SpaceTravelMockApi from "../../services/SpaceTravelMockApi";
 function Spacecrafts() {
   const [spacecrafts, setSpacecrafts] = useState([]);
   const { enableLoading, disableLoading } = useContext(LoadingContext);
-
   async function getSpacecrafts() {
     // todo get spacecrafts using the API
-    const results =  await SpaceTravelApi.getSpacecrafts();
+    const results = await SpaceTravelApi.getSpacecrafts();
     // update data
-    setSpacecrafts([...spacecrafts, results.data])
-
+    setSpacecrafts([...spacecrafts, results.data]);
   }
   useEffect(() => {
     async function runGetSpacecrafts() {
@@ -24,8 +22,12 @@ function Spacecrafts() {
     }
 
     runGetSpacecrafts();
+    console.log(SpaceTravelMockApi.MOCK_DB.spacecrafts);
+
+    
   }, [enableLoading, disableLoading]);
 
+ 
   const navigate = useNavigate();
 
   function handleClickOfBuild() {
@@ -45,7 +47,6 @@ function Spacecrafts() {
     }
     disableLoading();
   }
-
   return (
     <div>
       <button onClick={handleClickOfBuild}>🏗 Build a Spacecraft</button>
@@ -71,13 +72,13 @@ function Spacecrafts() {
 
             <div className={styles["spacecraft__infoContainer"]}>
               <div className={styles["spacecraft__info"]}>
-                <span>Name:</span>
-                <span>{spacecraft.name}</span>
+                <span>Name: </span>
+                <span> {spacecraft[index]["name"]}</span>
               </div>
 
               <div className={styles["spacecraft__info"]}>
                 <span>Capacity:</span>
-                <span>{spacecraft.capacity}</span>
+                <span>{spacecraft[index]["capacity"]}</span>
               </div>
             </div>
 
