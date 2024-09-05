@@ -12,7 +12,7 @@ function Spacecrafts() {
     // todo get spacecrafts using the API
     const results = await SpaceTravelApi.getSpacecrafts();
     // update data
-    setSpacecrafts([...spacecrafts, results.data]);
+    setSpacecrafts([...spacecrafts, ...results.data]);
   }
   useEffect(() => {
     async function runGetSpacecrafts() {
@@ -20,14 +20,9 @@ function Spacecrafts() {
       await getSpacecrafts();
       disableLoading();
     }
-
     runGetSpacecrafts();
-    console.log(SpaceTravelMockApi.MOCK_DB.spacecrafts);
-
-    
   }, [enableLoading, disableLoading]);
 
- 
   const navigate = useNavigate();
 
   function handleClickOfBuild() {
@@ -51,7 +46,7 @@ function Spacecrafts() {
     <div>
       <button onClick={handleClickOfBuild}>🏗 Build a Spacecraft</button>
       <div>
-        {spacecrafts.map((spacecraft, index) => (
+        {spacecrafts?.map((spacecraft, index) => (
           <div key={spacecraft.id} className={styles["spacecraft"]}>
             <div
               className={styles["spacecraft__imageContainer"]}
@@ -73,12 +68,14 @@ function Spacecrafts() {
             <div className={styles["spacecraft__infoContainer"]}>
               <div className={styles["spacecraft__info"]}>
                 <span>Name: </span>
-                <span> {spacecraft[index]["name"]}</span>
+                {/* <span> {spacecraft[index]["name"]}</span> */}
+                <span> {spacecraft.name}</span>
               </div>
 
               <div className={styles["spacecraft__info"]}>
                 <span>Capacity:</span>
-                <span>{spacecraft[index]["capacity"]}</span>
+                {/* <span>{spacecraft[index]["capacity"]}</span> */}
+                <span>{spacecraft.capacity}</span>
               </div>
             </div>
 
@@ -92,6 +89,10 @@ function Spacecrafts() {
           </div>
         ))}
       </div>
+      {/* add a tag is there are no spacecraft to show */}
+      {spacecrafts === undefined || spacecrafts.length == 0 ? (
+        <div className="text-center">No spacecraft to show</div>
+      ) : null}
     </div>
   );
 }

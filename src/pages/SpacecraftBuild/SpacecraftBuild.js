@@ -5,9 +5,8 @@ import styles from "./SpacecraftBuild.module.css";
 import { LoadingContext } from "../../context/LoadingProvider";
 import SpaceTravelApi from "../../services/SpaceTravelApi";
 import SpaceTravelMockApi from "../../services/SpaceTravelMockApi";
-function SpacecraftBuild({spaceDB}) {
+function SpacecraftBuild() {
 
-  console.log(spaceDB.spacecrafts)
   const INITIAL_SPACECRAFT = {
     name: "",
     capacity: "",
@@ -31,9 +30,10 @@ function SpacecraftBuild({spaceDB}) {
     });
   }
   async function handleSubmitOfForm(event) {
+    event.preventDefault();
     // todo submit the form using the API
     console.log(spacecraft);
-    console.log(SpaceTravelApi.buildSpacecraft);
+    console.log(SpaceTravelApi.buildSpacecraft(spacecraft));
 
     // SpaceTravelApi.buildSpacecraft({
     //   name: "Endeavor",
@@ -42,8 +42,7 @@ function SpacecraftBuild({spaceDB}) {
     //   pictureUrl:
     //     "https://www.dailynews.com/wp-content/uploads/2023/07/LDN-L-SHUTTLE-0721-DC-7.jpg?w=525",
     // });
-    console.log(SpaceTravelMockApi.MOCK_DB.spacecrafts);
-    event.preventDefault();
+    // console.log(SpaceTravelMockApi.MOCK_DB.spacecrafts);
   }
 
   function handleClickOfBack(event) {
