@@ -6,7 +6,6 @@ import { LoadingContext } from "../../context/LoadingProvider";
 import SpaceTravelApi from "../../services/SpaceTravelApi";
 import SpaceTravelMockApi from "../../services/SpaceTravelMockApi";
 function SpacecraftBuild() {
-
   const INITIAL_SPACECRAFT = {
     name: "",
     capacity: "",
@@ -17,32 +16,69 @@ function SpacecraftBuild() {
   const [errors, setErrors] = useState([]);
   const navigate = useNavigate();
   const { enableLoading, disableLoading } = useContext(LoadingContext);
+  const [isFormFilled, setIsFormFilled] = useState(false);
 
   function handleChangeOfFormInput(event) {
-    // todo update form state
-    //const name = e.target.name
-    //const value = e.target.value
     const { name, value } = event.target;
 
     setSpacecraft({
       ...spacecraft,
       [name]: value,
     });
+    // validate form
+    validateForm(spacecraft);
   }
+
+  // validate if image exist
+  async function checkImage(url) {
+    const res = await fetch(url);
+    const buff = await res.blob();
+
+    return buff.type.startsWith("image/");
+  }
+
+  console.log(
+    checkImage(
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoNdWDbdt4Zs8Dod9VShbjVvsEvh5LYpmoxIxpBfQXeMn7-aEi_Vi29BDryqflQ562u0U&usqp=CAU"
+    ),
+    41
+  );
+
+  const validateForm = (spacecraft) => {
+    // validate for button
+    if (
+      spacecraft.name !== "" &&
+      spacecraft.capacity !== "" &&
+      spacecraft.description !== ""
+    ) {
+      setIsFormFilled(true);
+    } else {
+      setIsFormFilled(false);
+    }
+  };
+
   async function handleSubmitOfForm(event) {
     event.preventDefault();
-    // todo submit the form using the API
-    console.log(spacecraft);
-    console.log(SpaceTravelApi.buildSpacecraft(spacecraft));
 
-    // SpaceTravelApi.buildSpacecraft({
-    //   name: "Endeavor",
-    //   capacity: "3000",
-    //   description: "Endeavor go beyond",
-    //   pictureUrl:
-    //     "https://www.dailynews.com/wp-content/uploads/2023/07/LDN-L-SHUTTLE-0721-DC-7.jpg?w=525",
-    // });
-    // console.log(SpaceTravelMockApi.MOCK_DB.spacecrafts);
+    //  check is it is empty
+    if (spacecraft.name === "") {
+      alert("Please Fill in the NAME of spacecraft");
+    } else if (spacecraft.capacity === "") {
+      alert("Please fill in the capacity of spacecraft");
+    } else if (spacecraft.description === "") {
+      alert("Please DESCRIBE your spacecraft");
+    } else if ((await checkImage(spacecraft.pictureUrl)) == false) {
+      alert("Please input a valid image URl");
+    } else {
+      SpaceTravelApi.buildSpacecraft(spacecraft);
+      // clear form
+      setSpacecraft({
+        name: "",
+        capacity: "",
+        description: "",
+        pictureUrl: "",
+      });
+    }
   }
 
   function handleClickOfBack(event) {
@@ -50,6 +86,12 @@ function SpacecraftBuild() {
     navigate("/spacecrafts");
   }
 
+  // disable button
+  const disable = {
+    border: "1px solid #999999",
+    backgroundColor: "#cccccc",
+    color: "#666666",
+  };
   return (
     <>
       <button className={styles["button__back"]} onClick={handleClickOfBack}>
@@ -67,6 +109,7 @@ function SpacecraftBuild() {
                   value={spacecraft.name}
                   onChange={handleChangeOfFormInput}
                   autoComplete="off"
+                  required
                 />
               </div>
 
@@ -78,6 +121,7 @@ function SpacecraftBuild() {
                   value={spacecraft.capacity}
                   onChange={handleChangeOfFormInput}
                   autoComplete="off"
+                  required
                 />
               </div>
 
@@ -112,7 +156,12 @@ function SpacecraftBuild() {
               </div>
 
               <div className={styles["button__submit"]}>
-                <button type="submit" onClick={handleSubmitOfForm}>
+                <button
+                  type="submit"
+                  onClick={handleSubmitOfForm}
+                  disabled={!isFormFilled}
+                  style={isFormFilled ? null : disable}
+                >
                   Build 🏗️
                 </button>
               </div>
