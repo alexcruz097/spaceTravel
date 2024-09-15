@@ -11,12 +11,18 @@ function Spacecrafts() {
   async function getSpacecrafts() {
     // todo get spacecrafts using the API
     const results = await SpaceTravelApi.getSpacecrafts();
+    // clear spacecraft on the page
+    setSpacecrafts([]);
+    console.log(spacecrafts);
+
     // update data
     setSpacecrafts([...spacecrafts, ...results.data]);
   }
   useEffect(() => {
     async function runGetSpacecrafts() {
       enableLoading();
+
+      // calll spacecraft
       await getSpacecrafts();
       disableLoading();
     }
@@ -38,6 +44,9 @@ function Spacecrafts() {
     enableLoading();
     const { isError } = await SpaceTravelApi.destroySpacecraftById({ id });
     if (!isError) {
+      // clear the page
+      // clear spacecraft on the page
+
       await getSpacecrafts();
     }
     disableLoading();

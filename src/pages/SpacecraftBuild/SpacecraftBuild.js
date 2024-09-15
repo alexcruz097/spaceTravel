@@ -11,6 +11,7 @@ function SpacecraftBuild() {
     capacity: "",
     description: "",
     pictureUrl: "",
+    currentLocation: 0,
   };
   const [spacecraft, setSpacecraft] = useState(INITIAL_SPACECRAFT);
   const [errors, setErrors] = useState([]);
@@ -28,21 +29,15 @@ function SpacecraftBuild() {
     // validate form
     validateForm(spacecraft);
   }
+  console.log(spacecraft);
 
   // validate if image exist
   async function checkImage(url) {
     const res = await fetch(url);
     const buff = await res.blob();
-
+    console.log(res);
     return buff.type.startsWith("image/");
   }
-
-  console.log(
-    checkImage(
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoNdWDbdt4Zs8Dod9VShbjVvsEvh5LYpmoxIxpBfQXeMn7-aEi_Vi29BDryqflQ562u0U&usqp=CAU"
-    ),
-    41
-  );
 
   const validateForm = (spacecraft) => {
     // validate for button
@@ -92,6 +87,18 @@ function SpacecraftBuild() {
     backgroundColor: "#cccccc",
     color: "#666666",
   };
+
+  const options = [
+    {
+      value: 0,
+      label: "Mercury",
+    },
+    {
+      value: 1,
+      label: "Venus",
+    },
+  ];
+
   return (
     <>
       <button className={styles["button__back"]} onClick={handleClickOfBack}>
@@ -112,7 +119,6 @@ function SpacecraftBuild() {
                   required
                 />
               </div>
-
               <div className={styles["form__inputContainer"]}>
                 <input
                   type="text"
@@ -124,7 +130,6 @@ function SpacecraftBuild() {
                   required
                 />
               </div>
-
               <div className={styles["form__inputContainer"]}>
                 <textarea
                   name="description"
@@ -133,10 +138,9 @@ function SpacecraftBuild() {
                   onChange={handleChangeOfFormInput}
                 />
               </div>
-
               <div className={styles["form__inputContainer"]}>
                 <input
-                  type="text"
+                  type="drowdown"
                   name="pictureUrl"
                   placeholder="Picture URL"
                   value={spacecraft.pictureUrl}
@@ -144,6 +148,20 @@ function SpacecraftBuild() {
                   autoComplete="off"
                 />
               </div>
+              <select
+                name="currentLocation"
+                value={spacecraft.currentLocation}
+                onChange={handleChangeOfFormInput}
+              >
+                <option value="0">Mercury</option>
+                <option value="1">Venus</option>
+                <option value="2">Earth</option>
+                <option value="3">Mars</option>
+                <option value="4">Jupiter</option>
+                <option value="5">Saturn</option>
+                <option value="6">Uranus</option>
+                <option value="7">Neptune</option>
+              </select>
             </div>
 
             <div className={styles["submitContainer"]}>
