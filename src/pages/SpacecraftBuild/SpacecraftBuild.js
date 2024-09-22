@@ -29,13 +29,11 @@ function SpacecraftBuild() {
     // validate form
     validateForm(spacecraft);
   }
-  console.log(spacecraft);
 
   // validate if image exist
   async function checkImage(url) {
     const res = await fetch(url);
     const buff = await res.blob();
-    console.log(res);
     return buff.type.startsWith("image/");
   }
 
@@ -51,7 +49,6 @@ function SpacecraftBuild() {
       setIsFormFilled(false);
     }
   };
-
   async function handleSubmitOfForm(event) {
     event.preventDefault();
 
@@ -66,6 +63,7 @@ function SpacecraftBuild() {
       alert("Please input a valid image URl");
     } else {
       SpaceTravelApi.buildSpacecraft(spacecraft);
+
       // clear form
       setSpacecraft({
         name: "",
@@ -75,7 +73,6 @@ function SpacecraftBuild() {
       });
     }
   }
-
   function handleClickOfBack(event) {
     // todo navigate back
     navigate("/spacecrafts");
@@ -87,17 +84,6 @@ function SpacecraftBuild() {
     backgroundColor: "#cccccc",
     color: "#666666",
   };
-
-  const options = [
-    {
-      value: 0,
-      label: "Mercury",
-    },
-    {
-      value: 1,
-      label: "Venus",
-    },
-  ];
 
   return (
     <>
@@ -121,7 +107,7 @@ function SpacecraftBuild() {
               </div>
               <div className={styles["form__inputContainer"]}>
                 <input
-                  type="text"
+                  type="number"
                   name="capacity"
                   placeholder="Capacity"
                   value={spacecraft.capacity}

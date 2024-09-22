@@ -10,7 +10,6 @@ function Planets() {
     useContext(LoadingContext);
   const [selectedPlanetId, setSelectedPlanetId] = useState();
   const [selectedSpacecraftId, setSelectedSpacecraftId] = useState();
-
   async function getPlanetsWithSpacecrafts() {
     const { data: planets, isError: isErrorPlanets } =
       await SpaceTravelApi.getPlanets();
@@ -18,33 +17,20 @@ function Planets() {
       await SpaceTravelApi.getSpacecrafts();
 
     if (!isErrorPlanets && !isErrorSpacecrafts) {
-      // console.log(spacecrafts);
-      // todo fill planets.spacecrafts with spacecrafts
-      // for (let i = 0; i <= spacecrafts.length; i++) {
-      //   let position = spacecrafts[i]?.currentLocation;
-      //   console.log(spacecrafts[i]?.currentLocation)
-      //   if (position) {
-      //     planets[position].spacecraft = spacecrafts[i];
-      //   }
-      // }
-      console.log(planets,30);
-      console.log(spacecrafts, 31);
-      planets.map((planet, index) => {
-        
-        for (let i = 0; i <= spacecrafts.length; i++) {
-          let position = spacecrafts[i]?.currentLocation;
-          console.log(spacecrafts[i]?.currentLocation);
-          if (position === index) {
-            planet.spacecraft = spacecrafts;
-          } else {
-            planet.spacecraft = [];
+      for (const planet of planets) {
+        planet.spacecrafts = [];
+
+        for (const spacecraft of spacecrafts) {
+          if (planet.id === parseInt(spacecraft.currentLocation)) {
+            planet.spacecrafts.push(spacecraft);
           }
         }
-      });
-      setPlanetsWithSpacecrafts([...planets]);
+      }
+
+      setPlanetsWithSpacecrafts(planets);
     }
   }
-  console.log(planetsWithSpacecrafts, 31);
+
   useEffect(() => {
     async function runGetPlanetsWithSpacecrafts() {
       enableLoading();
@@ -56,76 +42,91 @@ function Planets() {
   }, [enableLoading, disableLoading]);
 
   function handleClickOfPlanet(event, id) {
-    // todo set the selected planet
+    if (!isLoading) {
+      setSelectedPlanetId(id);
+    }
   }
 
   async function handleClickOfSpacecraft(event, spacecraftId, planetId) {
-    // todo set the selected spacecraft
-    // todo send spacecraft to planet using the API
-    // todo call getPlanetsWithSpacecrafts to refresh the page content
+    if (
+      !isLoading &&
+      Number.isInteger(selectedPlanetId) &&
+      selectedPlanetId !== planetId
+    ) {
+      setSelectedSpacecraftId(spacecraftId);
+
+      const { isError } = await SpaceTravelApi.sendSpacecraftToPlanet({
+        spacecraftId,
+        targetPlanetId: selectedPlanetId,
+      });
+      if (!isError) {
+        await getPlanetsWithSpacecrafts();
+        setSelectedPlanetId(null);
+        setSelectedSpacecraftId(null);
+      }
+    }
   }
 
   return (
     <>
-      {planetsWithSpacecrafts &&
-        planetsWithSpacecrafts?.map((planet, index) => (
-          <div key={index} className={styles["planetWithSpacecrafts"]}>
-            <div
-              className={`${styles["planet"]} ${
-                selectedPlanetId === planet.id && styles["planet--selected"]
-              }`}
-              onClick={(event) => handleClickOfPlanet(event, planet.id)}
-            >
-              <div className={styles["planet__imageContainer"]}>
-                <img
-                  src={planet.pictureUrl}
-                  alt={`The planet ${planet.name}`}
-                  className={styles["planet__image"]}
-                />
-              </div>
-
-              <div className={styles["planet__info"]}>
-                <div>{planet.name}</div>
-                <div>{planet.currentPopulation}</div>
-              </div>
+      {planetsWithSpacecrafts.map((planet, index) => (
+        <div key={index} className={styles["planetWithSpacecrafts"]}>
+          <div
+            className={`${styles["planet"]} ${
+              selectedPlanetId === planet.id && styles["planet--selected"]
+            }`}
+            onClick={(event) => handleClickOfPlanet(event, planet.id)}
+          >
+            <div className={styles["planet__imageContainer"]}>
+              <img
+                src={planet.pictureUrl}
+                alt={`The planet ${planet.name}`}
+                className={styles["planet__image"]}
+              />
             </div>
 
-            <div className={styles["planet__spacecrafts"]}>
-              {planet?.spacecraft?.map((spacecraft, index) => (
-                <div
-                  key={index}
-                  className={`${styles["planet__spacecraft"]} ${
-                    selectedSpacecraftId === spacecraft.id &&
-                    styles["planet__spacecraft--selected"]
-                  }`}
-                  onClick={(event) =>
-                    handleClickOfSpacecraft(event, spacecraft.id, planet.id)
-                  }
-                >
-                  <div className={styles["planet__spacecraft__imageContainer"]}>
-                    {spacecraft.pictureUrl ? (
-                      <img
-                        src={spacecraft.pictureUrl}
-                        alt={`The spacecraft ${spacecraft.name}`}
-                        className={styles["planet__spacecraft__image"]}
-                      />
-                    ) : (
-                      <span
-                        className={styles["planet__spacecraft__image--default"]}
-                      >
-                        🚀
-                      </span>
-                    )}
-                  </div>
-                  <div className={"planet__spacecraft__info"}>
-                    <div>{spacecraft.name}</div>
-                    <div>{spacecraft.capacity}</div>
-                  </div>
-                </div>
-              ))}
+            <div className={styles["planet__info"]}>
+              <div>{planet.name}</div>
+              <div>{planet.currentPopulation}</div>
             </div>
           </div>
-        ))}
+
+          <div className={styles["planet__spacecrafts"]}>
+            {planet.spacecrafts.map((spacecraft, index) => (
+              <div
+                key={index}
+                className={`${styles["planet__spacecraft"]} ${
+                  selectedSpacecraftId === spacecraft.id &&
+                  styles["planet__spacecraft--selected"]
+                }`}
+                onClick={(event) =>
+                  handleClickOfSpacecraft(event, spacecraft.id, planet.id)
+                }
+              >
+                <div className={styles["planet__spacecraft__imageContainer"]}>
+                  {spacecraft.pictureUrl ? (
+                    <img
+                      src={spacecraft.pictureUrl}
+                      alt={`The spacecraft ${spacecraft.name}`}
+                      className={styles["planet__spacecraft__image"]}
+                    />
+                  ) : (
+                    <span
+                      className={styles["planet__spacecraft__image--default"]}
+                    >
+                      🚀
+                    </span>
+                  )}
+                </div>
+                <div className={"planet__spacecraft__info"}>
+                  <div>{spacecraft.name}</div>
+                  <div>{spacecraft.capacity}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
     </>
   );
 }

@@ -10,13 +10,9 @@ function Spacecrafts() {
   const { enableLoading, disableLoading } = useContext(LoadingContext);
   async function getSpacecrafts() {
     // todo get spacecrafts using the API
-    const results = await SpaceTravelApi.getSpacecrafts();
-    // clear spacecraft on the page
-    setSpacecrafts([]);
-    console.log(spacecrafts);
+    const results = await SpaceTravelMockApi.getSpacecrafts();
 
-    // update data
-    setSpacecrafts([...spacecrafts, ...results.data]);
+    setSpacecrafts([...results.data]);
   }
   useEffect(() => {
     async function runGetSpacecrafts() {
@@ -28,14 +24,12 @@ function Spacecrafts() {
     }
     runGetSpacecrafts();
   }, [enableLoading, disableLoading]);
-
   const navigate = useNavigate();
 
   function handleClickOfBuild() {
     // todo navigate to build spacecraft page
     navigate("/spacecraftbuild");
   }
-
   function handleClickOfImageContainer(event, id) {
     navigate(`/spacecraft/${id}`);
   }
