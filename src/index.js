@@ -10,7 +10,9 @@ root.render(
   <React.StrictMode>
     {
       // todo wrap App with LoadingProvider to subscribe App to its context
-      <App />
+      <LoadingProvider>
+        <App />
+      </LoadingProvider>
     }
   </React.StrictMode>
 );

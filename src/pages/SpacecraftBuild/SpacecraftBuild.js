@@ -29,6 +29,7 @@ function SpacecraftBuild() {
     // validate form
     validateForm(spacecraft);
   }
+  console.log(spacecraft)
 
   // validate if image exist
   async function checkImage(url) {

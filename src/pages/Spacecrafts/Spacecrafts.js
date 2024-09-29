@@ -38,9 +38,10 @@ function Spacecrafts() {
     enableLoading();
     const { isError } = await SpaceTravelApi.destroySpacecraftById({ id });
     if (!isError) {
-      // clear the page
-      // clear spacecraft on the page
+      // enable loading
+      enableLoading();
 
+      // clear spacecraft on the page
       await getSpacecrafts();
     }
     disableLoading();
