@@ -43,6 +43,9 @@ function App() {
       </BrowserRouter>
       {
         // todo render Loading based on its condition
+        isLoading
+        &&
+        <Loading />
       }
     </>
   );

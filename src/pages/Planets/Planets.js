@@ -16,6 +16,7 @@ function Planets() {
     const { data: spacecrafts, isError: isErrorSpacecrafts } =
       await SpaceTravelApi.getSpacecrafts();
 
+    // add spacraft to planet
     if (!isErrorPlanets && !isErrorSpacecrafts) {
       for (const planet of planets) {
         planet.spacecrafts = [];
